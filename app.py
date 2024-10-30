@@ -75,18 +75,15 @@ CORS(app)
 UPLOAD_FOLDER = './uploaded_images'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Ensure the upload folder exists
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-# Endpoint para método GET
 @app.route('/api/', methods=['GET'])
 def get_example():
     data = {"message": "Este es un ejemplo de respuesta GET"}
     return jsonify(data)
 
-# Endpoint to accept image via POST
-@app.route('/api/upload_image', methods=['POST'])
+@app.route('/', methods=['POST'])
 def upload_image():
     # Check if the POST request contains the 'file' part
     if 'file' not in request.files:
@@ -129,24 +126,9 @@ def upload_image():
         return jsonify({"error": "Invalid file type"}), 400
     
     
-
-# Function to check allowed file types
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-# Endpoint para método POST
-@app.route('/api/post_example', methods=['POST'])
-def post_example():
-    # Recibimos los datos enviados en el cuerpo de la solicitud
-    data = request.get_json()
-    
-    # Aquí procesaríamos los datos. En este caso, simplemente los retornamos.
-    response = {
-        "message": "Datos recibidos correctamente",
-        "data": data
-    }
-    return jsonify(response)
 
 @app.errorhandler(404)
 def not_found(error):
